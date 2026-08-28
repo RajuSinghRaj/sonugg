@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Happy Raksha Bandhan! ❤️</title>
+  <meta name="description" content="A special personalized Raksha Bandhan surprise filled with memories, sister report, and interactive Rakhi tying!">
+  
+  <!-- Google Fonts: Caveat (Handwritten), Outfit (Modern Clean Heading), Poppins (Body) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Outfit:wght@500;700;800&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ==================== BACKGROUND PARTICLES CONTAINER ==================== -->
+  <div id="particles-bg" class="particles-bg"></div>
+
+  <!-- ==================== FLOATING MUSIC PLAYER ==================== -->
+  <div class="music-player-container">
+    <button id="music-btn" class="music-btn" aria-label="Play background music">
+      <span class="music-icon">🎵</span>
+      <span class="music-text">Play Music</span>
+      <div class="sound-wave" id="sound-wave">
+        <span></span><span></span><span></span><span></span>
+      </div>
+    </button>
+    <!-- Hidden HTML5 Audio Element (Loops infinitely) -->
+    <audio id="bg-audio" loop autoplay preload="auto">
+      <source src="assets/audio/rakhi-song.mp3" type="audio/mpeg">
+      <source src="assets/audio/rakhi-song.mpeg" type="audio/mpeg">
+      Your browser does not support the audio element.
+    </audio>
+    <div id="music-toast" class="music-toast hidden">
+      <span class="toast-icon">ℹ️</span>
+      <span id="music-toast-text">Add your song to <code>assets/audio/rakhi-song.mp3</code> 🎵</span>
+    </div>
+  </div>
+
+  <!-- ==================== 1. LOADING SCREEN ==================== -->
+  <div id="loading-screen" class="loading-screen">
+    <div class="loading-card">
+      <div class="loading-rakhi-icon">🧿</div>
+      <h2 id="loading-text" class="loading-text">Preparing something special...</h2>
+      <div class="progress-bar-wrapper">
+        <div id="loading-progress" class="loading-progress"></div>
+      </div>
+      <div class="loading-subtext" id="loading-subtext">Rakhi Protocol v2.0</div>
+    </div>
+  </div>
+
+  <!-- ==================== SISTER PERKS & SECRET MODAL ==================== -->
+  <div id="escape-modal" class="modal-overlay hidden">
+    <div class="modal-card">
+      <div class="modal-emoji">🎁</div>
+      <h3 class="modal-title">Sonuuuuuuuu ggggg's VIP Sister Perks! 💖</h3>
+      <div class="perks-list">
+        <div class="perk-item">🍫 Unlimited Lifetime Chocolates</div>
+        <div class="perk-item">😜 100% Free Food Stealing License</div>
+        <div class="perk-item">🤗 Infinite Brother Hugs & Support</div>
+        <div class="perk-item">🔒 Escape Failed: Stuck With Me Forever!</div>
+      </div>
+      <button id="close-modal-btn" class="btn btn-primary">Claim All Perks, Thothee! ❤️</button>
+    </div>
+  </div>
+
+  <div id="main-content" class="main-content hidden-init">
+
+    <!-- ==================== 2. HERO SECTION ==================== -->
+    <header class="hero-section" id="hero">
+      <div class="hero-paper-badge">Official Thothee Scrapbook ✂️</div>
+      <div class="hero-rakhi-wrapper">
+        <div class="hero-sparkle sp-1">✨</div>
+        <div class="hero-sparkle sp-2">💖</div>
+        <div class="hero-sparkle sp-3">✨</div>
+        <div class="hero-rakhi-visual">🧿</div>
+      </div>
+      <h1 class="hero-title" id="hero-title">Happy Raksha Bandhan, <br><span class="highlight-name">Sonuuuuuuuu ggggg</span> <span class="heart-pulse">❤️</span></h1>
+      <p class="hero-subtitle" id="hero-subtitle">Unfortunately for you, Thothee, you're stuck with me for life! 😂</p>
+
+      <div class="hero-buttons">
+        <button id="accept-fate-btn" class="btn btn-primary">
+          Accept Your Fate ❤️
+        </button>
+        <button id="try-escape-btn" class="btn btn-secondary">
+          Sister Perks & Secrets 🎁
+        </button>
+      </div>
+    </header>
+
+    <!-- ==================== 4. PHOTO GALLERY ==================== -->
+    <section class="gallery-section" id="gallery">
+      <div class="section-header">
+        <span class="scrap-tag">Memories of Thothee 📸</span>
+        <h2 class="section-title">A Few Memories 📸</h2>
+        <p class="section-desc">Swipe or scroll through our collection of legendary Sonuuuuuuuu ggggg moments!</p>
+      </div>
+
+      <!-- 10 Polaroid Photo Cards Container -->
+      <div class="gallery-grid" id="gallery-grid">
+        <!-- Photo Cards dynamically rendered or injected via script -->
+      </div>
+    </section>
+
+    <!-- ==================== 5. FUN SISTER REPORT ==================== -->
+    <section class="report-section" id="report">
+      <div class="report-card">
+        <div class="tape-strip tape-top-left"></div>
+        <div class="tape-strip tape-top-right"></div>
+        
+        <div class="report-header">
+          <span class="report-stamp">OFFICIAL DOCUMENT</span>
+          <h2 class="report-title">Official Sister Report 📝</h2>
+          <p class="report-target">Subject: <span id="report-sister-name">Sister</span></p>
+        </div>
+
+        <div class="stats-container" id="stats-container">
+          <!-- Stat Bars -->
+          <div class="stat-item">
+            <div class="stat-info">
+              <span class="stat-label">Annoying Me</span>
+              <span class="stat-value" id="val-0">0%</span>
+            </div>
+            <div class="stat-bar-bg">
+              <div class="stat-bar-fill" style="--target-width: 98%;"></div>
+            </div>
+          </div>
+
+          <div class="stat-item">
+            <div class="stat-info">
+              <span class="stat-label">Being Awesome</span>
+              <span class="stat-value" id="val-1">0%</span>
+            </div>
+            <div class="stat-bar-bg">
+              <div class="stat-bar-fill" style="--target-width: 100%;"></div>
+            </div>
+          </div>
+
+          <div class="stat-item">
+            <div class="stat-info">
+              <span class="stat-label">Giving Unwanted Advice</span>
+              <span class="stat-value" id="val-2">0%</span>
+            </div>
+            <div class="stat-bar-bg">
+              <div class="stat-bar-fill" style="--target-width: 101%;"></div>
+            </div>
+          </div>
+
+          <div class="stat-item">
+            <div class="stat-info">
+              <span class="stat-label">Stealing Food</span>
+              <span class="stat-value" id="val-3">0%</span>
+            </div>
+            <div class="stat-bar-bg">
+              <div class="stat-bar-fill" style="--target-width: 87%;"></div>
+            </div>
+          </div>
+
+          <div class="stat-item">
+            <div class="stat-info">
+              <span class="stat-label">Being A Good Sister</span>
+              <span class="stat-value" id="val-4">0%</span>
+            </div>
+            <div class="stat-bar-bg">
+              <div class="stat-bar-fill" style="--target-width: 100%;"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="verdict-box">
+          <div class="verdict-title">Final Verdict:</div>
+          <p class="verdict-text">"Highly annoying. Highly valuable. ❤️"</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== 6. RAKHI TRANSITION ==================== -->
+    <section class="transition-section" id="transition-sec">
+      <div class="transition-card">
+        <p class="trans-text-1">Okay... enough embarrassing you 😂</p>
+        <div class="trans-divider">✦ ✦ ✦</div>
+        <p class="trans-text-2">But there's one thing missing...</p>
+      </div>
+    </section>
+
+    <!-- ==================== 7. INTERACTIVE RAKHI ANIMATION ==================== -->
+    <section class="rakhi-tying-section" id="rakhi-section">
+      <div class="rakhi-card">
+        <div class="tape-strip tape-center"></div>
+        <h2 class="rakhi-section-title" id="rakhi-status-title">Ready to tie the Rakhi? 🧿</h2>
+        <p class="rakhi-section-sub" id="rakhi-status-sub">Tap the button to wrap the sacred thread around the wrist!</p>
+
+        <!-- Dynamic SVG Wrist & Rakhi Illustration -->
+        <div class="wrist-container">
+          <svg class="wrist-svg" viewBox="0 0 320 220" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <!-- Wrist Skin Gradient -->
+              <linearGradient id="skinGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#ffe3d1" />
+                <stop offset="100%" stop-color="#f5cbb0" />
+              </linearGradient>
+              
+              <!-- Sleeve Gradient -->
+              <linearGradient id="sleeveGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#e84393" />
+                <stop offset="100%" stop-color="#ff7675" />
+              </linearGradient>
+
+              <!-- Thread Gradient -->
+              <linearGradient id="threadGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#d63031" />
+                <stop offset="50%" stop-color="#fdcb6e" />
+                <stop offset="100%" stop-color="#d63031" />
+              </linearGradient>
+
+              <!-- Gold Dial Gradient -->
+              <radialGradient id="goldGrad" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stop-color="#ffeaa7" />
+                <stop offset="70%" stop-color="#fdcb6e" />
+                <stop offset="100%" stop-color="#e17055" />
+              </radialGradient>
+            </defs>
+
+            <!-- Sleeve / Arm background -->
+            <rect x="0" y="85" width="60" height="70" rx="12" fill="url(#sleeveGrad)" />
+            <path d="M 55 90 Q 70 85 80 90 L 80 150 Q 70 155 55 150 Z" fill="#fdcb6e" opacity="0.8"/>
+
+            <!-- Wrist / Arm outline -->
+            <path class="arm-shape" d="M 60 92 C 120 92, 200 95, 260 85 C 280 82, 310 90, 315 110 C 318 125, 305 140, 270 148 C 210 155, 120 152, 60 152 Z" fill="url(#skinGrad)" stroke="#e6b89c" stroke-width="2"/>
+            
+            <!-- Hand Knuckles detail -->
+            <path d="M 270 100 Q 290 102 300 112 Q 290 135 265 140" fill="none" stroke="#dfa280" stroke-width="2" stroke-linecap="round"/>
+
+            <!-- Thread paths around wrist (Animated via JS strokeDashoffset) -->
+            <path id="svg-thread-back" class="svg-thread thread-back" d="M 140 92 C 125 105, 125 140, 140 153" fill="none" stroke="url(#threadGrad)" stroke-width="5" stroke-linecap="round" />
+            <path id="svg-thread-front" class="svg-thread thread-front" d="M 140 92 C 155 105, 155 140, 140 153" fill="none" stroke="url(#threadGrad)" stroke-width="6" stroke-linecap="round" />
+            
+            <!-- Extended Left & Right Thread Tails -->
+            <path id="svg-thread-left" class="svg-thread thread-tail" d="M 140 122 Q 100 135 70 128" fill="none" stroke="url(#threadGrad)" stroke-width="4" stroke-linecap="round" />
+            <path id="svg-thread-right" class="svg-thread thread-tail" d="M 140 122 Q 180 135 210 125" fill="none" stroke="url(#threadGrad)" stroke-width="4" stroke-linecap="round" />
+
+            <!-- The Rakhi Emblem Group (Animated moving & scaling down into wrist) -->
+            <g id="svg-rakhi-emblem" class="rakhi-emblem-group" transform="translate(140, 40)">
+              <!-- Outer Gold Floral Petals -->
+              <circle cx="0" cy="0" r="32" fill="#d63031" />
+              <circle cx="0" cy="0" r="28" fill="#fdcb6e" stroke="#ffffff" stroke-width="2" stroke-dasharray="6,3"/>
+              
+              <!-- Red/Pink Layer -->
+              <circle cx="0" cy="0" r="21" fill="#e84393" />
+              
+              <!-- Center Gold Disc -->
+              <circle cx="0" cy="0" r="14" fill="url(#goldGrad)" />
+              
+              <!-- Evil Eye / Bead Center -->
+              <circle cx="0" cy="0" r="8" fill="#0984e3" />
+              <circle cx="0" cy="0" r="5" fill="#ffffff" />
+              <circle cx="0" cy="0" r="2.5" fill="#2d3436" />
+              
+              <!-- Decorative Sparkle Beads -->
+              <circle cx="-20" cy="0" r="3" fill="#fdcb6e" />
+              <circle cx="20" cy="0" r="3" fill="#fdcb6e" />
+              <circle cx="0" cy="-20" r="3" fill="#fdcb6e" />
+              <circle cx="0" cy="20" r="3" fill="#fdcb6e" />
+            </g>
+          </svg>
+        </div>
+
+        <button id="tie-rakhi-btn" class="btn btn-rakhi">
+          Tie Rakhi 🧿
+        </button>
+
+        <div id="rakhi-success-box" class="rakhi-success-box hidden">
+          <p class="success-msg-main">Rakhi successfully tied! ❤️</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== 8. FINAL MESSAGE ==================== -->
+    <section class="final-message-section" id="final-message">
+      <div class="message-card">
+        <div class="heart-stamp">💖</div>
+        <h3 class="message-tagline">Okay, jokes aside...</h3>
+        <blockquote class="message-quote">
+          "Some people become family by birth,<br>
+          and some people become family because<br>
+          life puts them next door. ❤️"
+        </blockquote>
+        <p class="message-personal" id="message-personal">Really glad you're my sister, Sonuuuuuuuu ggggg ❤️</p>
+        <div class="message-wishes" id="message-wishes">Happy Raksha Bandhan, Thothee! 🧿❤️</div>
+      </div>
+    </section>
+
+    <!-- ==================== 9. REPLAY & FOOTER ==================== -->
+    <footer class="footer-section">
+      <button id="replay-btn" class="btn btn-replay">
+        Replay The Surprise 🔄
+      </button>
+      <p class="footer-note">Crafted with ❤️ for Sonuuuuuuuu ggggg (Best Thothee Ever!).</p>
+    </footer>
+
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
