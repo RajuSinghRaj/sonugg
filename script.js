@@ -172,6 +172,78 @@ const soundFX = new SoundSynth();
    MAIN APPLICATION STATE & INITIALIZATION
    -------------------------------------------------------------------------- */
 document.addEventListener("DOMContentLoaded", () => {
+  initSplashScreen();
+});
+
+/* --------------------------------------------------------------------------
+   SPLASH ENTRY SCREEN — Unlocks audio autoplay via user gesture
+   Browsers block unmuted audio until user interacts. This splash screen
+   captures that first tap, starts music immediately, then proceeds.
+   -------------------------------------------------------------------------- */
+function initSplashScreen() {
+  const splashScreen = document.getElementById("splash-screen");
+  const splashBtn = document.getElementById("splash-enter-btn");
+  const bgAudio = document.getElementById("bg-audio");
+
+  if (!splashScreen || !splashBtn) {
+    // No splash — init everything directly
+    initApp();
+    return;
+  }
+
+  // Preload the audio while user sees splash screen
+  if (bgAudio) {
+    bgAudio.loop = true;
+    bgAudio.volume = 1;
+    bgAudio.preload = "auto";
+    const sourceElem = bgAudio.querySelector("source");
+    if (sourceElem) {
+      sourceElem.src = CONFIG.songPath;
+      bgAudio.load();
+    }
+  }
+
+  // On splash button click — THIS is the user gesture that unlocks audio
+  splashBtn.addEventListener("click", () => {
+    // Unlock audio context with user gesture (play muted), then unmute after 2s delay
+    if (bgAudio) {
+      bgAudio.muted = true;
+      bgAudio.play().catch(() => {});
+      bgAudio.pause();
+      // Start actual audible playback after 2 second delay
+      setTimeout(() => {
+        bgAudio.muted = false;
+        bgAudio.currentTime = 0;
+        bgAudio.play().then(() => {
+          console.log("🎵 Audio started after 2s delay!");
+        }).catch((err) => {
+          console.warn("Audio play failed:", err);
+        });
+      }, 2000);
+    }
+
+    // Animate splash screen out
+    splashScreen.classList.add("splash-exit");
+    
+    // After splash animation, remove it and start the app
+    setTimeout(() => {
+      splashScreen.style.display = "none";
+      initApp();
+    }, 600);
+  });
+
+  // Also allow pressing Enter or Space
+  splashBtn.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" || e.key === " ") {
+      splashBtn.click();
+    }
+  });
+}
+
+/* --------------------------------------------------------------------------
+   Initialize all app sections (called after splash is dismissed)
+   -------------------------------------------------------------------------- */
+function initApp() {
   initBackgroundParticles();
   initLoadingScreen();
   initHeroSection();
@@ -181,7 +253,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initRakhiTying();
   initFinalMessage();
   initReplayButton();
-});
+}
 
 /* --------------------------------------------------------------------------
    BACKGROUND PARTICLES (Hearts & Sparkles)
@@ -280,7 +352,7 @@ function initHeroSection() {
 }
 
 /* --------------------------------------------------------------------------
-   3. FLOATING MUSIC PLAYER
+   3. FLOATING MUSIC PLAYER (Play/Pause toggle — audio already started by splash)
    -------------------------------------------------------------------------- */
 function initMusicPlayer() {
   const musicBtn = document.getElementById("music-btn");
@@ -291,17 +363,10 @@ function initMusicPlayer() {
 
   if (!musicBtn || !bgAudio) return;
 
-  // Set audio source from config and ensure infinite looping
+  // Ensure loop is set
   bgAudio.loop = true;
-  bgAudio.volume = 1;
-  const sourceElem = bgAudio.querySelector("source");
-  if (sourceElem) {
-    sourceElem.src = CONFIG.songPath;
-    bgAudio.load();
-  }
 
-  let isPlaying = false;
-  let hasUnmuted = false;
+  let isPlaying = !bgAudio.paused;
 
   function setPlayingUI() {
     isPlaying = true;
@@ -316,63 +381,22 @@ function initMusicPlayer() {
     if (soundWave) soundWave.classList.remove("playing");
   }
 
-  // Aggressive autoplay: try unmuted first, fall back to muted + unmute on interaction
-  function tryAutoplay() {
-    // Try unmuted play first (works on some browsers/desktop)
-    bgAudio.muted = false;
-    bgAudio.play().then(() => {
-      setPlayingUI();
-      hasUnmuted = true;
-    }).catch(() => {
-      // Unmuted blocked — start muted (always allowed by browsers)
-      bgAudio.muted = true;
-      bgAudio.play().then(() => {
-        setPlayingUI();
-        // Unmute on the very first user interaction
-        listenForInteraction();
-      }).catch(() => {
-        // Even muted failed — wait for any interaction
-        listenForInteraction();
-      });
-    });
+  // Sync UI with current audio state (audio was started by splash screen)
+  if (!bgAudio.paused) {
+    setPlayingUI();
   }
 
-  function listenForInteraction() {
-    if (hasUnmuted) return;
-    const events = ["click", "touchstart", "pointerdown", "scroll", "mousemove", "keydown", "wheel"];
-    
-    const unmute = () => {
-      if (hasUnmuted) return;
-      hasUnmuted = true;
-      bgAudio.muted = false;
-      bgAudio.play().then(() => {
-        setPlayingUI();
-      }).catch(() => {});
-      events.forEach(evt => document.removeEventListener(evt, unmute, { capture: true }));
-    };
-
-    events.forEach(evt => document.addEventListener(evt, unmute, { capture: true, once: false }));
-  }
-
-  // Start immediately
-  tryAutoplay();
-
-  // Also retry after a short delay (some browsers allow after page settles)
-  setTimeout(() => {
-    if (!isPlaying || bgAudio.muted) tryAutoplay();
-  }, 1000);
-  setTimeout(() => {
-    if (!isPlaying || bgAudio.muted) tryAutoplay();
-  }, 3000);
+  // Listen for audio state changes to keep UI in sync
+  bgAudio.addEventListener("play", setPlayingUI);
+  bgAudio.addEventListener("pause", setPausedUI);
 
   // Manual Music Toggle Button
   musicBtn.addEventListener("click", (e) => {
     e.stopPropagation();
     soundFX.playPopSound();
 
-    if (!isPlaying) {
+    if (bgAudio.paused) {
       bgAudio.muted = false;
-      hasUnmuted = true;
       bgAudio.play().then(() => {
         setPlayingUI();
       }).catch((err) => {
